@@ -1,5 +1,5 @@
 # Restful GIN
-Rest API with Golang, MongoDB
+Rest API with Golang Gin, MongoDB, JWT Auth, Middlewares
 
 docker-compose up -d
 
