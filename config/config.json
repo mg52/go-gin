@@ -3,7 +3,7 @@
     "env": "local",
     "host": {
       "address": "localhost",
-      "port": 8585
+      "port": 8080
     },
     "database": {
       "mongoDbUrl": "mongodb://root:root@localhost:27017",

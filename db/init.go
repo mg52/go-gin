@@ -21,7 +21,12 @@ func (r *Resource) Close() {
 
 func InitResource() (*Resource, error) {
 	// Set client options
-	clientOptions := options.Client().ApplyURI("mongodb://root:root@localhost:27017")
+
+	// for local:
+	//clientOptions := options.Client().ApplyURI("mongodb://root:root@localhost:27017")
+
+	// for docker compose:
+	clientOptions := options.Client().ApplyURI("mongodb://root:root@mongodb-go-gin:27017")
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
