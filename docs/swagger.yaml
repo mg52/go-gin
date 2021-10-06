@@ -1,0 +1,253 @@
+basePath: /api/v1
+definitions:
+  form.ToDoForm:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  form.User:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  model.ToDo:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  model.User:
+    properties:
+      id:
+        type: string
+      password:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      username:
+        type: string
+    type: object
+host: localhost:8585
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample swagger
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: mediaType
+        enum:
+        - json
+        - xml
+        in: query
+        name: mediaType
+        type: string
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/form.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+      summary: Login
+      tags:
+      - UserController
+  /sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Sign Up
+      parameters:
+      - description: mediaType
+        enum:
+        - json
+        - xml
+        in: query
+        name: mediaType
+        type: string
+      - description: New User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/form.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+      summary: Sign Up
+      tags:
+      - UserController
+  /todo:
+    get:
+      consumes:
+      - application/json
+      description: Get all ToDo
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.ToDo'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all ToDo
+      tags:
+      - ToDoController
+    post:
+      consumes:
+      - application/json
+      description: Create ToDo
+      parameters:
+      - description: mediaType
+        enum:
+        - json
+        - xml
+        in: query
+        name: mediaType
+        type: string
+      - description: New ToDo
+        in: body
+        name: ToDo
+        required: true
+        schema:
+          $ref: '#/definitions/form.ToDoForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.ToDo'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Create ToDo
+      tags:
+      - ToDoController
+  /todo/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a ToDo by Id
+      parameters:
+      - description: mediaType
+        enum:
+        - json
+        - xml
+        in: query
+        name: mediaType
+        type: string
+      - description: ToDo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ToDo'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a ToDo
+      tags:
+      - ToDoController
+    put:
+      consumes:
+      - application/json
+      description: Get a ToDo by Id
+      parameters:
+      - description: mediaType
+        enum:
+        - json
+        - xml
+        in: query
+        name: mediaType
+        type: string
+      - description: ToDo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update ToDo
+        in: body
+        name: ToDo
+        required: true
+        schema:
+          $ref: '#/definitions/form.ToDoForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ToDo'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a ToDo
+      tags:
+      - ToDoController
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: Get all user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all user
+      tags:
+      - UserController
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
