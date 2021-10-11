@@ -1,8 +1,11 @@
 package middlewares
 
 import (
-	"mg52-gin/app/model"
+	"fmt"
+	"go-gin/app/model"
+	"go-gin/config"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -10,9 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
-
-// Create the JWT key used to create the signature
-var jwtKey = []byte("uit_secret_key")
 
 type Claims struct {
 	Id       string   `json:"id"`
@@ -34,7 +34,11 @@ func GetUserIdFromToken(tokenReq string) (Id string) {
 func GenerateJWTToken(user model.User) string {
 	// Declare the expiration time of the token
 	// here, we have kept it as 5 minutes
-	expirationTime := time.Now().Add(24 * time.Hour)
+	// exp := time.Now().Add(24 * time.Hour)
+
+	expTimeMs, _ := strconv.Atoi(config.GetString("jwtExpirationMs"))
+	exp := time.Now().Add(time.Millisecond * time.Duration(expTimeMs)).Unix()
+
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &Claims{
 		Id:       user.Id.Hex(),
@@ -42,7 +46,7 @@ func GenerateJWTToken(user model.User) string {
 		Roles:    user.Roles,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
-			ExpiresAt: expirationTime.Unix(),
+			ExpiresAt: exp,
 			Audience:  "user",
 			Issuer:    "uit",
 		},
@@ -51,7 +55,7 @@ func GenerateJWTToken(user model.User) string {
 	// Declare the token with the algorithm used for signing, and the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Create the JWT string
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString([]byte(config.GetString("jwtSecret")))
 	if err != nil {
 		logrus.Print(err)
 	}
@@ -70,7 +74,9 @@ func RequireAuthenticated() gin.HandlerFunc {
 		// Initialize a new instance of `Claims`
 		claims := &Claims{}
 		tkn, err := jwt.ParseWithClaims(jwtToken[1], claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
+			fmt.Println("testoor")
+			fmt.Println([]byte(config.GetString("jwtSecret")))
+			return []byte(config.GetString("jwtSecret")), nil
 		})
 
 		if err != nil {
@@ -82,6 +88,7 @@ func RequireAuthenticated() gin.HandlerFunc {
 			c.Writer.WriteHeader(http.StatusBadRequest)
 		}
 		if !tkn.Valid {
+			fmt.Println("not valid")
 			c.Abort()
 			c.Writer.WriteHeader(http.StatusUnauthorized)
 		}

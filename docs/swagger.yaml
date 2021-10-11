@@ -4,6 +4,8 @@ definitions:
     properties:
       name:
         type: string
+      userId:
+        type: string
     required:
     - name
     type: object
@@ -19,6 +21,8 @@ definitions:
       id:
         type: string
       name:
+        type: string
+      userId:
         type: string
     type: object
   model.User:
@@ -194,7 +198,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: Get a ToDo by Id
+      description: Update a ToDo by Id
       parameters:
       - description: mediaType
         enum:
@@ -223,7 +227,7 @@ paths:
             $ref: '#/definitions/model.ToDo'
       security:
       - ApiKeyAuth: []
-      summary: Get a ToDo
+      summary: Update a ToDo
       tags:
       - ToDoController
   /user:

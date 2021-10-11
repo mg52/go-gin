@@ -1,14 +1,13 @@
 package api
 
 import (
-	"fmt"
-	"mg52-gin/app/form"
-	"mg52-gin/app/repository"
-	"mg52-gin/db"
-	"mg52-gin/middlewares"
-	"mg52-gin/utils/bcrypt"
-	"mg52-gin/utils/constant"
-	err2 "mg52-gin/utils/err"
+	"go-gin/app/form"
+	"go-gin/app/repository"
+	"go-gin/db"
+	"go-gin/middlewares"
+	"go-gin/utils/bcrypt"
+	"go-gin/utils/constant"
+	err2 "go-gin/utils/err"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -72,9 +71,7 @@ func login(userEntity repository.IUser) func(ctx *gin.Context) {
 // @Success 200 {array} model.User
 // @Router /sign-up [post]
 func signUp(userEntity repository.IUser) func(ctx *gin.Context) {
-	fmt.Println("asdasdasd")
 	return func(ctx *gin.Context) {
-		fmt.Println("sgnups")
 		userRequest := form.User{}
 		if err := ctx.Bind(&userRequest); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})

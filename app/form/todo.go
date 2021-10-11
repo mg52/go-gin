@@ -1,5 +1,6 @@
 package form
 
 type ToDoForm struct {
-	Name string `json:"name" binding:"required"`
+	Name   string `json:"name" binding:"required"`
+	UserId string `json:"userId"`
 }

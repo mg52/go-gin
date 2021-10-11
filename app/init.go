@@ -1,10 +1,10 @@
 package app
 
 import (
-	"mg52-gin/app/api"
-	"mg52-gin/config"
-	"mg52-gin/db"
-	"mg52-gin/middlewares"
+	"go-gin/app/api"
+	"go-gin/config"
+	"go-gin/db"
+	"go-gin/middlewares"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

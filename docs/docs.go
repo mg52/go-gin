@@ -259,7 +259,7 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get a ToDo by Id",
+                "description": "Update a ToDo by Id",
                 "consumes": [
                     "application/json"
                 ],
@@ -269,7 +269,7 @@ var doc = `{
                 "tags": [
                     "ToDoController"
                 ],
-                "summary": "Get a ToDo",
+                "summary": "Update a ToDo",
                 "parameters": [
                     {
                         "enum": [
@@ -349,6 +349,9 @@ var doc = `{
             "properties": {
                 "name": {
                     "type": "string"
+                },
+                "userId": {
+                    "type": "string"
                 }
             }
         },
@@ -370,6 +373,9 @@ var doc = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "userId": {
                     "type": "string"
                 }
             }

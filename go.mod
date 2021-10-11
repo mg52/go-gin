@@ -1,4 +1,4 @@
-module mg52-gin
+module go-gin
 
 go 1.16
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"mg52-gin/app"
+	"go-gin/app"
 )
 
 // @title Swagger Example API

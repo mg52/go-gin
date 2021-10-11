@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"mg52-gin/app/form"
-	"mg52-gin/app/model"
-	"mg52-gin/db"
+	"go-gin/app/form"
+	"go-gin/app/model"
+	"go-gin/db"
 	"net/http"
 
 	"github.com/jinzhu/copier"
@@ -22,10 +22,10 @@ type toDoEntity struct {
 }
 
 type IToDo interface {
-	GetAll() ([]model.ToDo, int, error)
+	GetAll(userId string) ([]model.ToDo, int, error)
 	CreateOne(todo form.ToDoForm) (model.ToDo, int, error)
-	GetOneByID(id string) (*model.ToDo, int, error) // need return pointer
-	Update(id string, todo form.ToDoForm) (model.ToDo, int, error)
+	GetOneByID(userId string, id string) (*model.ToDo, int, error) // need return pointer
+	Update(userId string, id string, todo form.ToDoForm) (model.ToDo, int, error)
 }
 
 //func NewToDoEntity
@@ -35,11 +35,11 @@ func NewToDoEntity(resource *db.Resource) IToDo {
 	return ToDoEntity
 }
 
-func (entity *toDoEntity) GetAll() ([]model.ToDo, int, error) {
+func (entity *toDoEntity) GetAll(userId string) ([]model.ToDo, int, error) {
 	toDoList := []model.ToDo{}
 	ctx, cancel := initContext()
 	defer cancel()
-	cursor, err := entity.repo.Find(ctx, bson.M{})
+	cursor, err := entity.repo.Find(ctx, bson.M{"userId": userId})
 
 	if err != nil {
 		return []model.ToDo{}, 400, err
@@ -58,8 +58,9 @@ func (entity *toDoEntity) GetAll() ([]model.ToDo, int, error) {
 
 func (entity *toDoEntity) CreateOne(todoForm form.ToDoForm) (model.ToDo, int, error) {
 	todo := model.ToDo{
-		Id:   primitive.NewObjectID(),
-		Name: todoForm.Name,
+		Id:     primitive.NewObjectID(),
+		UserId: todoForm.UserId,
+		Name:   todoForm.Name,
 	}
 	ctx, cancel := initContext()
 	defer cancel()
@@ -72,14 +73,14 @@ func (entity *toDoEntity) CreateOne(todoForm form.ToDoForm) (model.ToDo, int, er
 	return todo, http.StatusOK, nil
 }
 
-func (entity *toDoEntity) GetOneByID(id string) (*model.ToDo, int, error) {
+func (entity *toDoEntity) GetOneByID(userId string, id string) (*model.ToDo, int, error) {
 	var todo model.ToDo
 	ctx, cancel := initContext()
 	defer cancel()
 	logrus.Print(id)
 	objID, _ := primitive.ObjectIDFromHex(id)
 
-	err := entity.repo.FindOne(ctx, bson.M{"_id": objID}).Decode(&todo)
+	err := entity.repo.FindOne(ctx, bson.M{"_id": objID, "userId": userId}).Decode(&todo)
 	if err != nil {
 		return nil, http.StatusNotFound, err
 	}
@@ -87,17 +88,19 @@ func (entity *toDoEntity) GetOneByID(id string) (*model.ToDo, int, error) {
 	return &todo, http.StatusOK, nil
 }
 
-func (entity *toDoEntity) Update(id string, todoForm form.ToDoForm) (model.ToDo, int, error) {
+func (entity *toDoEntity) Update(userId string, id string, todoForm form.ToDoForm) (model.ToDo, int, error) {
 	var todo *model.ToDo
 	ctx, cancel := initContext()
 
 	defer cancel()
 	objID, _ := primitive.ObjectIDFromHex(id)
 
-	todo, _, err := entity.GetOneByID(id)
+	todo, _, err := entity.GetOneByID(userId, id)
 	if err != nil {
 		return model.ToDo{}, http.StatusNotFound, nil
 	}
+
+	todoForm.UserId = userId
 
 	err = copier.Copy(todo, todoForm) // this is why we need return a pointer: to copy value
 	if err != nil {
@@ -109,7 +112,7 @@ func (entity *toDoEntity) Update(id string, todoForm form.ToDoForm) (model.ToDo,
 	opts := &options.FindOneAndUpdateOptions{
 		ReturnDocument: &isReturnNewDoc,
 	}
-	err = entity.repo.FindOneAndUpdate(ctx, bson.M{"_id": objID}, bson.M{"$set": todo}, opts).Decode(&todo)
+	err = entity.repo.FindOneAndUpdate(ctx, bson.M{"_id": objID, "userId": userId}, bson.M{"$set": todo}, opts).Decode(&todo)
 
 	return *todo, http.StatusOK, nil
 }

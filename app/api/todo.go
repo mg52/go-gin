@@ -2,12 +2,12 @@ package api
 
 import (
 	"fmt"
-	"mg52-gin/app/form"
-	"mg52-gin/app/repository"
-	"mg52-gin/db"
-	"mg52-gin/middlewares"
-	"mg52-gin/utils/constant"
-	err2 "mg52-gin/utils/err"
+	"go-gin/app/form"
+	"go-gin/app/repository"
+	"go-gin/db"
+	"go-gin/middlewares"
+	"go-gin/utils/constant"
+	err2 "go-gin/utils/err"
 	"net/http"
 	"strings"
 
@@ -42,7 +42,7 @@ func getAllToDo(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 		userId := middlewares.GetUserIdFromToken(jwtToken[1])
 		fmt.Println(userId)
 
-		list, code, err := toDoEntity.GetAll()
+		list, code, err := toDoEntity.GetAll(userId)
 		response := map[string]interface{}{
 			"todo": list,
 			"err":  err2.GetErrorMessage(err),
@@ -64,12 +64,23 @@ func getAllToDo(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 // @Security ApiKeyAuth
 func createToDo(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("Authorization")
+		jwtToken := strings.Split(token, "Bearer ")
+		userId := middlewares.GetUserIdFromToken(jwtToken[1])
+		fmt.Println(userId)
 
 		todoReq := form.ToDoForm{}
 		if err := ctx.Bind(&todoReq); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 			return
 		}
+
+		fmt.Println(todoReq)
+
+		todoReq.UserId = userId
+
+		fmt.Println(todoReq)
+
 		todo, code, err := toDoEntity.CreateOne(todoReq)
 		response := map[string]interface{}{
 			"todo": todo,
@@ -92,8 +103,13 @@ func createToDo(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 // @Security ApiKeyAuth
 func getToDoById(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("Authorization")
+		jwtToken := strings.Split(token, "Bearer ")
+		userId := middlewares.GetUserIdFromToken(jwtToken[1])
+		fmt.Println(userId)
+
 		id := ctx.Param("id")
-		todo, code, err := toDoEntity.GetOneByID(id)
+		todo, code, err := toDoEntity.GetOneByID(userId, id)
 		response := map[string]interface{}{
 			"todo": todo,
 			"err":  err2.GetErrorMessage(err),
@@ -102,9 +118,9 @@ func getToDoById(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 	}
 }
 
-// GetToDo godoc
-// @Summary Get a ToDo
-// @Description Get a ToDo by Id
+// UpdateToDo godoc
+// @Summary Update a ToDo
+// @Description Update a ToDo by Id
 // @Tags ToDoController
 // @Accept json
 // @Produce json
@@ -116,13 +132,18 @@ func getToDoById(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 // @Security ApiKeyAuth
 func updateToDo(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("Authorization")
+		jwtToken := strings.Split(token, "Bearer ")
+		userId := middlewares.GetUserIdFromToken(jwtToken[1])
+		fmt.Println(userId)
+
 		id := ctx.Param("id")
 		todoReq := form.ToDoForm{}
 		if err := ctx.Bind(&todoReq); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 			return
 		}
-		todo, code, err := toDoEntity.Update(id, todoReq)
+		todo, code, err := toDoEntity.Update(userId, id, todoReq)
 		response := map[string]interface{}{
 			"todo": todo,
 			"err":  err2.GetErrorMessage(err),

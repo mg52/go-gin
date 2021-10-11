@@ -245,7 +245,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get a ToDo by Id",
+                "description": "Update a ToDo by Id",
                 "consumes": [
                     "application/json"
                 ],
@@ -255,7 +255,7 @@
                 "tags": [
                     "ToDoController"
                 ],
-                "summary": "Get a ToDo",
+                "summary": "Update a ToDo",
                 "parameters": [
                     {
                         "enum": [
@@ -335,6 +335,9 @@
             "properties": {
                 "name": {
                     "type": "string"
+                },
+                "userId": {
+                    "type": "string"
                 }
             }
         },
@@ -356,6 +359,9 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "userId": {
                     "type": "string"
                 }
             }

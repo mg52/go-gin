@@ -2,11 +2,11 @@ package repository
 
 import (
 	"errors"
-	"mg52-gin/app/form"
-	"mg52-gin/app/model"
-	"mg52-gin/db"
-	"mg52-gin/utils/bcrypt"
-	"mg52-gin/utils/constant"
+	"go-gin/app/form"
+	"go-gin/app/model"
+	"go-gin/db"
+	"go-gin/utils/bcrypt"
+	"go-gin/utils/constant"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
