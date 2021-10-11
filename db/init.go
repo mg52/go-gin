@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"go-gin/config"
 	"log"
 
 	"github.com/sirupsen/logrus"
@@ -23,10 +24,10 @@ func InitResource() (*Resource, error) {
 	// Set client options
 
 	// for local:
-	// clientOptions := options.Client().ApplyURI("mongodb://root:root@localhost:27017")
+	clientOptions := options.Client().ApplyURI(config.GetString("database.mongoDbUrl"))
 
 	// for docker compose:
-	clientOptions := options.Client().ApplyURI("mongodb://root:root@mongodb-go-gin:27017")
+	// clientOptions := options.Client().ApplyURI("mongodb://root:root@mongodb-go-gin:27017")
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -44,5 +45,5 @@ func InitResource() (*Resource, error) {
 
 	fmt.Println("Connected to MongoDB!")
 
-	return &Resource{DB: client.Database("demo")}, nil
+	return &Resource{DB: client.Database(config.GetString("database.mongoDbName"))}, nil
 }

@@ -6,7 +6,7 @@
       "port": 8080
     },
     "database": {
-      "mongoDbUrl": "mongodb://root:root@mongodb:27017",
+      "mongoDbUrl": "mongodb://root:root@mongodb-go-gin:27017",
       "mongoDbName":"demo"
     },
     "jwtSecret": "R1BYcTVXVGNDU2JmWHVnZ1lnN0FKeGR3cU1RUU45QXV4SDJONFZ3ckhwS1N0ZjNCYVkzZ0F4RVBSS1UzRENwRw==",
