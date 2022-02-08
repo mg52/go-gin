@@ -1,11 +1,12 @@
 package middlewares
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"strings"
 )
 
 func GetRolesFromToken(tokenReq string) (role []string) {
@@ -24,16 +25,16 @@ func GetRolesFromToken(tokenReq string) (role []string) {
 	return roles
 }
 
-func RequireAuthorization(auths ...string)  gin.HandlerFunc {
+func RequireAuthorization(auths ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token:=c.GetHeader("Authorization")
-		if token ==""{
+		token := c.GetHeader("Authorization")
+		if token == "" {
 			logrus.Print("abc")
 			c.Abort()
 			c.Writer.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		jwtToken :=strings.Split(token,"Bearer ")
+		jwtToken := strings.Split(token, "Bearer ")
 		roles := GetRolesFromToken(jwtToken[1])
 		if len(roles) <= 0 {
 			invalidRequest(c)
