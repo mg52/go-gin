@@ -118,7 +118,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get all ToDo
+      description: Get all ToDo TEST2
       produces:
       - application/json
       responses:
@@ -130,7 +130,7 @@ paths:
             type: array
       security:
       - ApiKeyAuth: []
-      summary: Get all ToDo
+      summary: Get all ToDo TEST
       tags:
       - ToDoController
     post:

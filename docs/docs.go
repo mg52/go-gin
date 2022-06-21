@@ -133,7 +133,7 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get all ToDo",
+                "description": "Get all ToDo TEST2",
                 "consumes": [
                     "application/json"
                 ],
@@ -143,7 +143,7 @@ var doc = `{
                 "tags": [
                     "ToDoController"
                 ],
-                "summary": "Get all ToDo",
+                "summary": "Get all ToDo TEST",
                 "responses": {
                     "200": {
                         "description": "OK",

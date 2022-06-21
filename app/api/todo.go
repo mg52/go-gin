@@ -28,8 +28,8 @@ func ApplyToDoAPI(app *gin.RouterGroup, resource *db.Resource) {
 
 // GetAllToDo godoc
 // @Tags ToDoController
-// @Summary Get all ToDo
-// @Description Get all ToDo
+// @Summary Get all ToDo TEST
+// @Description Get all ToDo TEST2
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} model.ToDo
@@ -68,13 +68,13 @@ func createToDo(toDoEntity repository.IToDo) func(ctx *gin.Context) {
 		jwtToken := strings.Split(token, "Bearer ")
 		userId := middlewares.GetUserIdFromToken(jwtToken[1])
 		fmt.Println(userId)
-
+		fmt.Println("before validation")
 		todoReq := form.ToDoForm{}
 		if err := ctx.Bind(&todoReq); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 			return
 		}
-
+		fmt.Println("after validation")
 		fmt.Println(todoReq)
 
 		todoReq.UserId = userId
