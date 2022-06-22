@@ -349,9 +349,6 @@ var doc = `{
             "properties": {
                 "name": {
                     "type": "string"
-                },
-                "userId": {
-                    "type": "string"
                 }
             }
         },

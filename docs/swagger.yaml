@@ -4,8 +4,6 @@ definitions:
     properties:
       name:
         type: string
-      userId:
-        type: string
     required:
     - name
     type: object
