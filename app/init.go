@@ -22,9 +22,7 @@ func (app Routes) StartGin() {
 	r := gin.Default()
 
 	r.Use(gin.Logger())
-	r.Use(middlewares.NewRecovery())
 	r.Use(middlewares.NewCors([]string{"*"}))
-	//r.GET("swagger/*any", middlewares.NewSwagger())
 	r.GET("swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	publicRoute := r.Group("/api/v1")
@@ -33,15 +31,6 @@ func (app Routes) StartGin() {
 		logrus.Error(err)
 	}
 	defer resource.Close()
-
-	r.Static("/template/css", "./template/css")
-	r.Static("/template/images", "./template/images")
-	//r.Static("/template", "./template")
-
-	r.NoRoute(func(context *gin.Context) {
-		//context.File("./template/route_not_found.html")
-		context.File("./template/index.html")
-	})
 
 	api.ApplyToDoAPI(publicRoute, resource)
 	api.ApplyUserAPI(publicRoute, resource)
